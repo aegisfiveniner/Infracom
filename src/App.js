@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Dashboard from "./views/Dashboard";
+import { Routes, Route } from "react-router-dom";
+import Form from "./components/Form";
+import Table from "./components/Table";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchItems } from "./store/actions/itemAction";
+import { useEffect } from "react";
+import Detail from "./components/Detail";
 
 function App() {
+  const dispatch = useDispatch();
+  const { items } = useSelector((state) => state);
+
+  useEffect(() => {
+    dispatch(fetchItems());
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<Dashboard items={items} />}>
+        <Route path="/" element={<Table items={items} />} />
+        <Route path="/:id" element={<Detail />} />
+        <Route path="add" element={<Form form={"add"} />} />
+        <Route path="edit/:id" element={<Form form={"edit"} />} />
+      </Route>
+    </Routes>
   );
 }
 
